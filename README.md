@@ -37,6 +37,9 @@ in the same directory with the name sidekiqbeat.
 
 ```
 make
+
+# create bianry for linux/amd64
+GOOS=linux GOARCH=amd64 mage build
 ```
 
 
