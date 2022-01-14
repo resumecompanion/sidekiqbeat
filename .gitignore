@@ -3,5 +3,6 @@
 
 .DS_Store
 /sidekiqbeat
+/sidekiqbeat.*
 /sidekiqbeat.test
 *.pyc

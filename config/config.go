@@ -7,6 +7,14 @@ import "time"
 
 type Config struct {
 	Period time.Duration `config:"period"`
+	Connection struct {
+		Sidekiq struct {
+			Password string `config:"password"`
+			Host     string `config:"host"`
+			Port     string `config:"port"`
+			Type     string `config:"type"`
+		} `config:"sidekiq"`
+	} `config:"connection"`
 }
 
 var DefaultConfig = Config{
