@@ -9,6 +9,8 @@ import (
 	"github.com/elastic/beats/v7/libbeat/logp"
 
 	"github.com/resumecompanion/sidekiqbeat/config"
+	"github.com/resumecompanion/sidekiqbeat/queues"
+
 )
 
 // sidekiqbeat configuration.
@@ -42,6 +44,9 @@ func (bt *sidekiqbeat) Run(b *beat.Beat) error {
 		return err
 	}
 
+
+  sidekiqQueue := queues.Sidekiq{&bt.config, nil}
+
 	ticker := time.NewTicker(bt.config.Period)
 	counter := 1
 	for {
@@ -51,12 +56,16 @@ func (bt *sidekiqbeat) Run(b *beat.Beat) error {
 		case <-ticker.C:
 		}
 
+    sidekiqQueue.Connect()
+
+    var fields common.MapStr
+    fields = sidekiqQueue.CollectMetrics()
+    sidekiqQueue.Close()
+
+
 		event := beat.Event{
 			Timestamp: time.Now(),
-			Fields: common.MapStr{
-				"type":    b.Info.Name,
-				"counter": counter,
-			},
+			Fields: fields,
 		}
 		bt.client.Publish(event)
 		logp.Info("Event sent")
